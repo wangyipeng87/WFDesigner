@@ -239,6 +239,7 @@
                 $(this.node.node).attr("key", nodesetting.key);
                 this.nodeText.attr({ "text": nodesetting.text });
             }
+
         };
 
         wfrule = function(options) {
@@ -813,7 +814,7 @@
             }
         }
 
-        var getNodeByKey = function(key) {
+        this.getNodeByKey = function(key) {
             if (nodelist != null && nodelist != undefined && nodelist.length > 0) {
                 var j = -1;
                 for (var i = 0; i < nodelist.length; i++) {
@@ -835,10 +836,10 @@
             }
         }
 
-        this.addNode = function() {
-            nodelist.push(new wfnode({
+        this.addNode = function(nodesetting) {
+            var pldnodesetting = {
                 key: Raphael.createUUID(),
-                text: "流程" + nodelist.length,
+                text: "节点" + nodelist.length,
                 nodeType: 3,
                 x: 200,
                 y: 20,
@@ -850,11 +851,13 @@
                 opacity: 0.8,
                 strokeWidth: 1.5,
                 cursor: "pointer"
-            }));
+            };
+            pldnodesetting = $.extend(pldnodesetting, nodesetting);
+            nodelist.push(new wfnode(pldnodesetting));
         }
 
-        this.addRule = function() {
-            rulelist.push(new wfrule({
+        this.addRule = function(rulesetting) {
+            var oldrulesetting = {
                 key: Raphael.createUUID(),
                 text: "",
                 beginNodeKey: "",
@@ -871,10 +874,13 @@
                 opacity: 0.8,
                 cursor: "pointer",
                 fontSize: "12px"
-            }));
+            };
+            oldrulesetting = $.extend(oldrulesetting, rulesetting);
+            rulelist.push(new wfrule(oldrulesetting));
         }
 
         this.initNewDesign = function() {
+
             nodelist.push(new wfnode({
                 key: Raphael.createUUID(),
                 text: "申请",
