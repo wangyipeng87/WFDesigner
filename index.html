@@ -6,10 +6,19 @@
     </script>
     <script src="Content/Plugins/bootstrapcontentmenu/prettify.js"></script>
     <script src="Content/js/draw-min.js"></script>
-    <script src="Content/js/wfdesign.js"></script>
+    <!-- <script src="Content/js/wfdesign.js"></script> -->
+    <script src="Content/js/jquery.wfdesigner.js"></script>
     <script type="text/javascript">
+        var des;
         $(document).ready(function() {
-            initNewDesign();
+            des = $("#divdesign").wfdesigner();
+            des.initDesign();
+            $("#btnaddnode").click(function() {
+                des.addNode();
+            });
+            $("#btnaddrule").click(function() {
+                des.addRule();
+            });
         });
     </script>
 </head>
@@ -18,9 +27,8 @@
 
     <div class="row">
         <div class="col-xs-12">
-            <button class="btn btn-sm btn-primary" onclick="addNode();">添加节点</button>
-            <button class="btn btn-sm btn-primary" onclick="addRule();">添加规则</button>
-            <button class="btn btn-sm btn-primary" onclick="save();">保存</button>
+            <button class="btn btn-sm btn-primary" id="btnaddnode" onclick="addNode();">添加节点</button>
+            <button class="btn btn-sm btn-primary" id="btnaddrule" onclick="addRule();">添加规则</button>
         </div>
     </div>
     <div class="row">
