@@ -920,6 +920,17 @@
 
 
 
+        var RuleSet = function(key) {
+            layer.open({
+                type: 2,
+                title: '流程规则设置 ',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['95%', '90%'],
+                content: '../Flow/RuleDetail?key=' + key //iframe的url
+            });
+        }
+
         this.getjson = function() {
             var tmpjson = {
                 tmpkey: $("#hidkey").val(),
@@ -975,7 +986,7 @@
             return tmpjson;
         }
 
-        var updateNodekey = function(old, newkey) {
+        this.updateNodekey = function(old, newkey) {
             if (rulelist != null && rulelist != undefined && rulelist.length > 0) {
                 for (var i = 0; i < rulelist.length; i++) {
                     if (rulelist[i].beginNodeKey == old) {

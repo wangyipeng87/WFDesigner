@@ -1,6 +1,7 @@
 ﻿var wf_view;
 var nodelist = new Array();
 var rulelist = new Array();
+
 function wfnode(options) {
     this.key = "";
     this.text = "";
@@ -20,20 +21,18 @@ function wfnode(options) {
     this.IsGoBack = 0;
     this.GoBackType = "";
     this.userlist = new Array();
-    this.move = function (dx, dy) {
+    this.move = function(dx, dy) {
         var x = this.ox + dx;
         var y = this.oy + dy;
         if (x < 0) {
             x = 0;
-        }
-        else if (x > wf_view.width - this.wfnode.settings.wf_width) {
+        } else if (x > wf_view.width - this.wfnode.settings.wf_width) {
             x = wf_view.width - this.wfnode.settings.wf_width;
         }
 
         if (y < 0) {
             y = 0;
-        }
-        else if (y > wf_view.height - this.wfnode.settings.wf_height) {
+        } else if (y > wf_view.height - this.wfnode.settings.wf_height) {
             y = wf_view.height - this.wfnode.settings.wf_height;
         }
         this.wfnode.node.attr("x", x);
@@ -68,12 +67,12 @@ function wfnode(options) {
         }
         wf_view.safari();
     };
-    this.dragger = function () {
+    this.dragger = function() {
         this.ox = this.attr("x");
         this.oy = this.attr("y");
         this.wfnode.changeStyle();
     };
-    this.up = function () {
+    this.up = function() {
         //this.wfnode.changeStyle();
         ////记录移动后的位置 
         //var bbox = this.wfnode.node.getBBox();
@@ -83,8 +82,8 @@ function wfnode(options) {
         //    this.wfnode.y = bbox.y;
         //}
     };
-    this.click = function () { };
-    this.rightclick = function (e) {
+    this.click = function() {};
+    this.rightclick = function(e) {
         var cir = e.target;
         layer.alert($(cir).attr("key"));
         return false;
@@ -116,7 +115,7 @@ function wfnode(options) {
     };
 
     //改变节点样式
-    this.changeStyle = function () {
+    this.changeStyle = function() {
         if (!this.node) {
             return;
             this.node.attr("fill", this.settings.noteColor);
@@ -149,17 +148,17 @@ function wfnode(options) {
     $(this.node.node).attr("nodeType", this.settings.nodeType);
     //$(this.node.node).attr("data-target","#context-menu");
     //$(this.node.node).data("nodeType", this.settings.nodeType);
-    if (this.settings.nodeType == 3 ) {
+    if (this.settings.nodeType == 3) {
         $(this.node.node).contextmenu({
             target: '#context-menu',
-            onItem: function (context, e) {
+            onItem: function(context, e) {
                 if ($(e.target).text() == "删除") {
                     layer.confirm('您确定要删除该节点吗？', {
                         btn: ['确定', '取消'] //按钮
-                    }, function () {
+                    }, function() {
                         removeNode($(context).attr("key"));
                         layer.closeAll();
-                    }, function () {
+                    }, function() {
                         layer.closeAll();
                     });
                 }
@@ -169,11 +168,11 @@ function wfnode(options) {
             }
         });
     }
-    if ( this.settings.nodeType == 1) {
+    if (this.settings.nodeType == 1) {
         $(this.node.node).contextmenu({
             target: '#context-menuBegin',
-            onItem: function (context, e) {
-                
+            onItem: function(context, e) {
+
                 if ($(e.target).text() == "属性") {
                     NodeSet($(context).attr("key"));
                 }
@@ -186,7 +185,7 @@ function wfnode(options) {
     this.nodeText = wf_view.text(this.settings.x + 52, this.settings.y + 25, this.settings.text);
     this.nodeText.attr({ "font-size": this.settings.fontSize });
     this.nodeText.attr({ "title": this.settings.text });
-    this.updateState = function (nodeoperation) {
+    this.updateState = function(nodeoperation) {
         var nodesetting = {
             key: "",
             text: "",
@@ -276,54 +275,54 @@ function wfrule(options) {
         backgroundcolor: "#efeff0"
     };
 
-    this.updatexy = function (bx, by, ex, ey) {
-        var npath = getArrForString(bx, by, ex, ey, this.settings.arrWidth);
-        //$(this.rulePath.node).attr("d", npath);
-        //$(this.beginCircle.node).attr("cx", bx);
-        //$(this.beginCircle.node).attr("cy", by);
-        //$(this.endCircle.node).attr("cx", ex);
-        //$(this.endCircle.node).attr("cy", ey);
-        //$(this.ruleText.node).attr("x", (bx + ex) / 2);
-        //$(this.ruleText.node).attr("y", (by + ey) / 2);
-        this.rulePath.attr("path", npath);
-        this.beginCircle.attr("cx", bx);
-        this.beginCircle.attr("cy", by);
-        this.endCircle.attr("cx", ex);
-        this.endCircle.attr("cy", ey);
-        this.ruleText.attr("x", (bx + ex) / 2);
-        this.ruleText.attr("y", (by + ey) / 2);
-        this.beginx = bx;
-        this.beginy = by;
-        this.endx = ex;
-        this.endy = ey;
-    },
-    this.pathmove = function (dx, dy) {
-        if (this.rule.beginNode != null && this.rule.beginNode != undefined) {
-            return;
-        }
-        if (this.rule.endNode != null && this.rule.endNode != undefined) {
-            return;
-        }
-        var bx = this.obeginx + dx;
-        var by = this.obeginy + dy;
-        var ex = this.oendx + dx;
-        var ey = this.oendy + dy;
-        if (bx < 0) {
-            bx = 0;
-        }
-        if (by < 0) {
-            by = 0;
-        }
-        if (ex < 0) {
-            ex = 0;
-        }
-        if (ey < 0) {
-            ey = 0;
-        }
-        this.rule.updatexy(bx, by, ex, ey);
-        wf_view.safari();
-    };
-    this.pathdragger = function () {
+    this.updatexy = function(bx, by, ex, ey) {
+            var npath = getArrForString(bx, by, ex, ey, this.settings.arrWidth);
+            //$(this.rulePath.node).attr("d", npath);
+            //$(this.beginCircle.node).attr("cx", bx);
+            //$(this.beginCircle.node).attr("cy", by);
+            //$(this.endCircle.node).attr("cx", ex);
+            //$(this.endCircle.node).attr("cy", ey);
+            //$(this.ruleText.node).attr("x", (bx + ex) / 2);
+            //$(this.ruleText.node).attr("y", (by + ey) / 2);
+            this.rulePath.attr("path", npath);
+            this.beginCircle.attr("cx", bx);
+            this.beginCircle.attr("cy", by);
+            this.endCircle.attr("cx", ex);
+            this.endCircle.attr("cy", ey);
+            this.ruleText.attr("x", (bx + ex) / 2);
+            this.ruleText.attr("y", (by + ey) / 2);
+            this.beginx = bx;
+            this.beginy = by;
+            this.endx = ex;
+            this.endy = ey;
+        },
+        this.pathmove = function(dx, dy) {
+            if (this.rule.beginNode != null && this.rule.beginNode != undefined) {
+                return;
+            }
+            if (this.rule.endNode != null && this.rule.endNode != undefined) {
+                return;
+            }
+            var bx = this.obeginx + dx;
+            var by = this.obeginy + dy;
+            var ex = this.oendx + dx;
+            var ey = this.oendy + dy;
+            if (bx < 0) {
+                bx = 0;
+            }
+            if (by < 0) {
+                by = 0;
+            }
+            if (ex < 0) {
+                ex = 0;
+            }
+            if (ey < 0) {
+                ey = 0;
+            }
+            this.rule.updatexy(bx, by, ex, ey);
+            wf_view.safari();
+        };
+    this.pathdragger = function() {
         if (this.rule.beginNode != null && this.rule.beginNode != undefined) {
             return;
         }
@@ -335,7 +334,7 @@ function wfrule(options) {
         this.oendx = this.rule.endx;
         this.oendy = this.rule.endy;
     };
-    this.pathup = function () {
+    this.pathup = function() {
         if (this.rule.beginNode != null && this.rule.beginNode != undefined) {
             return;
         }
@@ -374,14 +373,14 @@ function wfrule(options) {
         }
         wf_view.safari();
     };
-    this.pathclick = function () { };
-    this.pathrightclick = function (e) {
+    this.pathclick = function() {};
+    this.pathrightclick = function(e) {
         var cir = e.target;
         layer.alert($(cir).attr("key"));
         return false;
     };
 
-    this.beginmove = function (dx, dy) {
+    this.beginmove = function(dx, dy) {
         var bx = this.obeginx + dx;
         var by = this.obeginy + dy;
         var ex = this.oendx;
@@ -405,13 +404,13 @@ function wfrule(options) {
         }
         wf_view.safari();
     };
-    this.begindragger = function () {
+    this.begindragger = function() {
         this.obeginx = this.rule.beginx;
         this.obeginy = this.rule.beginy;
         this.oendx = this.rule.endx;
         this.oendy = this.rule.endy;
     };
-    this.beginup = function () {
+    this.beginup = function() {
         var isbegin = false;
         if (nodelist != null && nodelist != undefined && nodelist.length > 0) {
             for (var i = 0; i < nodelist.length; i++) {
@@ -439,15 +438,15 @@ function wfrule(options) {
         }
         wf_view.safari();
     };
-    this.beginclick = function () { };
-    this.beginrightclick = function (e) {
+    this.beginclick = function() {};
+    this.beginrightclick = function(e) {
         var cir = e.target;
         layer.alert($(cir).attr("key"));
         return false;
     };
 
 
-    this.endmove = function (dx, dy) {
+    this.endmove = function(dx, dy) {
         var bx = this.obeginx;
         var by = this.obeginy;
         var ex = this.oendx + dx;
@@ -471,13 +470,13 @@ function wfrule(options) {
         }
         wf_view.safari();
     };
-    this.enddragger = function () {
+    this.enddragger = function() {
         this.obeginx = this.rule.beginx;
         this.obeginy = this.rule.beginy;
         this.oendx = this.rule.endx;
         this.oendy = this.rule.endy;
     };
-    this.endup = function () {
+    this.endup = function() {
         var isend = false;
         if (nodelist != null && nodelist != undefined && nodelist.length > 0) {
             for (var i = 0; i < nodelist.length; i++) {
@@ -506,8 +505,8 @@ function wfrule(options) {
         }
         wf_view.safari();
     };
-    this.endclick = function () { };
-    this.endrightclick = function (e) {
+    this.endclick = function() {};
+    this.endrightclick = function(e) {
         var cir = e.target;
         layer.alert($(cir).attr("key"));
         return false;
@@ -538,14 +537,14 @@ function wfrule(options) {
     $(this.rulePath.node).attr("key", this.settings.key);
     $(this.rulePath.node).contextmenu({
         target: '#context-menu',
-        onItem: function (context, e) {
+        onItem: function(context, e) {
             if ($(e.target).text() == "删除") {
                 layer.confirm('您确定要删除该规则吗？', {
                     btn: ['确定', '取消'] //按钮
-                }, function () {
+                }, function() {
                     removeRule($(context).attr("key"));
                     layer.closeAll();
-                }, function () {
+                }, function() {
                     layer.closeAll();
                 });
             }
@@ -565,14 +564,14 @@ function wfrule(options) {
     $(this.beginCircle.node).attr("key", this.settings.key);
     $(this.beginCircle.node).contextmenu({
         target: '#context-menu',
-        onItem: function (context, e) {
+        onItem: function(context, e) {
             if ($(e.target).text() == "删除") {
                 layer.confirm('您确定要删除该规则吗？', {
                     btn: ['确定', '取消'] //按钮
-                }, function () {
+                }, function() {
                     removeRule($(context).attr("key"));
                     layer.closeAll();
-                }, function () {
+                }, function() {
                     layer.closeAll();
                 });
             }
@@ -590,14 +589,14 @@ function wfrule(options) {
     $(this.endCircle.node).attr("key", this.settings.key);
     $(this.endCircle.node).contextmenu({
         target: '#context-menu',
-        onItem: function (context, e) {
+        onItem: function(context, e) {
             if ($(e.target).text() == "删除") {
                 layer.confirm('您确定要删除该规则吗？', {
                     btn: ['确定', '取消'] //按钮
-                }, function () {
+                }, function() {
                     removeRule($(context).attr("key"));
                     layer.closeAll();
-                }, function () {
+                }, function() {
                     layer.closeAll();
                 });
             }
@@ -612,7 +611,7 @@ function wfrule(options) {
     this.ruleText.attr({ "font-size": this.settings.fontSize, "flood-color": this.settings.backgroundcolor, "cursor": this.settings.cursor });
     this.ruleText.attr({ "text": this.settings.text });
 
-    this.updatestate = function (ruleoperation) {
+    this.updatestate = function(ruleoperation) {
         var rulesettings = {
             key: "",
             text: "",
@@ -642,6 +641,7 @@ function wfrule(options) {
         $(this.rulePath.node).attr("key", rulesettings.key);
     };
 }
+
 function getArr(x1, y1, x2, y2, size) {
     var angle = Raphael.angle(x1, y1, x2, y2);
     var a45 = Raphael.rad(angle - 45);
@@ -740,20 +740,21 @@ function segmentsIntr(a, b, c, d) {
     }
 
     // 线段所在直线的交点坐标 (x , y)      
-    var x = ((b.x - a.x) * (d.x - c.x) * (c.y - a.y)
-                + (b.y - a.y) * (d.x - c.x) * a.x
-                - (d.y - c.y) * (b.x - a.x) * c.x) / denominator;
-    var y = -((b.y - a.y) * (d.y - c.y) * (c.x - a.x)
-                + (b.x - a.x) * (d.y - c.y) * a.y
-                - (d.x - c.x) * (b.y - a.y) * c.y) / denominator;
+    var x = ((b.x - a.x) * (d.x - c.x) * (c.y - a.y) +
+        (b.y - a.y) * (d.x - c.x) * a.x -
+        (d.y - c.y) * (b.x - a.x) * c.x) / denominator;
+    var y = -((b.y - a.y) * (d.y - c.y) * (c.x - a.x) +
+        (b.x - a.x) * (d.y - c.y) * a.y -
+        (d.x - c.x) * (b.y - a.y) * c.y) / denominator;
 
     /** 2 判断交点是否在两条线段上 **/
     if (
         // 交点在线段1上  
         (x - a.x) * (x - b.x) <= 0 && (y - a.y) * (y - b.y) <= 0
         // 且交点也在线段2上  
-         && (x - c.x) * (x - d.x) <= 0 && (y - c.y) * (y - d.y) <= 0
-        ) {
+        &&
+        (x - c.x) * (x - d.x) <= 0 && (y - c.y) * (y - d.y) <= 0
+    ) {
 
         // 返回交点p  
         return {
@@ -765,6 +766,7 @@ function segmentsIntr(a, b, c, d) {
     return false
 
 }
+
 function removeNode(key) {
     if (rulelist != null && rulelist != undefined && rulelist.length > 0) {
         for (var i = 0; i < rulelist.length; i++) {
@@ -808,6 +810,7 @@ function removeRule(key) {
         rulelist.splice(j, 1);
     }
 }
+
 function getNodeByKey(key) {
     if (nodelist != null && nodelist != undefined && nodelist.length > 0) {
         var j = -1;
@@ -818,6 +821,7 @@ function getNodeByKey(key) {
         }
     }
 }
+
 function getRuleByKey(key) {
     if (rulelist != null && rulelist != undefined && rulelist.length > 0) {
         var j = -1;
@@ -828,6 +832,7 @@ function getRuleByKey(key) {
         }
     }
 }
+
 function addNode() {
     nodelist.push(new wfnode({
         key: Raphael.createUUID(),
@@ -845,6 +850,7 @@ function addNode() {
         cursor: "pointer"
     }));
 }
+
 function addRule() {
     rulelist.push(new wfrule({
         key: Raphael.createUUID(),
@@ -865,11 +871,12 @@ function addRule() {
         fontSize: "12px"
     }));
 }
-$(document).ready(function () {
+$(document).ready(function() {
     wf_view = Raphael("divdesign", $(window).width(), $(window).height() - 28);
 
 
 });
+
 function initNewDesign() {
     nodelist.push(new wfnode({
         key: Raphael.createUUID(),
@@ -902,6 +909,7 @@ function initNewDesign() {
         cursor: "pointer"
     }));
 }
+
 function NodeSet(key) {
     layer.open({
         type: 2,
@@ -912,6 +920,7 @@ function NodeSet(key) {
         content: '../Flow/NodeDetail?key=' + key //iframe的url
     });
 }
+
 function RuleSet(key) {
     layer.open({
         type: 2,
